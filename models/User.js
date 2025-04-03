@@ -1,81 +1,63 @@
-import mongoose from 'mongoose';
+// models/User.js
+import { DataTypes } from "sequelize";
+import sequelize from "../db.js";
 
-const userSchema = new mongoose.Schema({
+const User = sequelize.define("User", {
   name: {
-    type: String,
-    required: true,
+    type: DataTypes.STRING,
+    allowNull: false,
     trim: true,
   },
   email: {
-    type: String,
-    required: true,
+    type: DataTypes.STRING,
+    allowNull: false,
     unique: true,
-    match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Please fill a valid email address']
+    validate: {
+      isEmail: true
+    }
   },
   password: {
-    type: String,
-    required: true,
-    minlength: 8,
+    type: DataTypes.STRING,
+    allowNull: false,
+    validate: {
+      len: [8, 255]
+    }
   },
   isAdmin: {
-    type: Boolean,
-    required: true,
-    default: false,
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
   },
   phoneNumber: {
-    type: String,
+    type: DataTypes.STRING,
   },
   profilePicture: {
-    type: String,
-    trim: true,
+    type: DataTypes.STRING,
   },
-  age:{
-    type: Number,
-  },
-  ridesCreated: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Ride',
-    },
-  ],
-  ridesJoined: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Ride',
-    },
-  ],
-  profile: {
-    bio: {
-      type: String,
-      trim: true,
-    },
-    preferences: {
-      smoking: {
-        type: String,
-        enum: ['No preference', 'Smoke-free only', 'Okay with smoking'],
-      },
-      music: {
-        type: String,
-        enum: ['No preference', 'Quiet ride', 'Music welcome'],
-      },
-      petFriendly: {
-        type: Boolean,
-        default: false,
-      },
-    },
+  age: {
+    type: DataTypes.INTEGER,
   },
   stars: {
-    type: Number,
-    max: 5,
-    default: 0
+    type: DataTypes.INTEGER,
+    defaultValue: 0,
+    validate: {
+      max: 5
+    }
   },
-  ratings: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Rating',
-    },
-  ],
-}, {timestamps: true}
-);
+  bio: {
+    type: DataTypes.STRING,
+  },
+  smokingPreference: {
+    type: DataTypes.ENUM("No preference", "Smoke-free only", "Okay with smoking"),
+  },
+  musicPreference: {
+    type: DataTypes.ENUM("No preference", "Quiet ride", "Music welcome"),
+  },
+  petFriendly: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
+  }
+}, {
+  timestamps: true
+});
 
-export default mongoose.model("User", userSchema);
+export default User;
