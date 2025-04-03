@@ -8,7 +8,8 @@ import authRoute from "./routes/auth.routes.js";
 import userRoute from "./routes/user.routes.js";
 import rideRoute from "./routes/ride.routes.js";
 import sequelize from "./db.js";
-
+import dotenv from 'dotenv';
+dotenv.config();  // Ensure environment variables are loaded
 
 sequelize.sync({ alter: true }) // ou { force: true } pour recréer
   .then(() => console.log("✅ Tables MySQL synchronisées"))
@@ -44,10 +45,10 @@ app.use(cors({
 app.use(cookieParser());
 app.use(express.json());
 app.use(cors({
-  origin: '*',             // Allow all origins (equivalent to origin: true)
-  methods: 'GET,POST,PUT,DELETE',  // Allow only specific methods
-  allowedHeaders: 'Content-Type,Authorization', // Allow specific headers
-  credentials: true       // Allow cookies and credentials to be included in requests
+  origin: "http://localhost:5173",  // ⚠️ PAS "*"
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization"]
 }));
 
 // Routes

@@ -1,4 +1,3 @@
-// models/User.js
 import { DataTypes } from "sequelize";
 import sequelize from "../db.js";
 
@@ -27,37 +26,9 @@ const User = sequelize.define("User", {
     type: DataTypes.BOOLEAN,
     defaultValue: false,
   },
-  phoneNumber: {
-    type: DataTypes.STRING,
-  },
-  profilePicture: {
-    type: DataTypes.STRING,
-  },
-  age: {
-    type: DataTypes.INTEGER,
-  },
-  stars: {
-    type: DataTypes.INTEGER,
-    defaultValue: 0,
-    validate: {
-      max: 5
-    }
-  },
-  bio: {
-    type: DataTypes.STRING,
-  },
-  smokingPreference: {
-    type: DataTypes.ENUM("No preference", "Smoke-free only", "Okay with smoking"),
-  },
-  musicPreference: {
-    type: DataTypes.ENUM("No preference", "Quiet ride", "Music welcome"),
-  },
-  petFriendly: {
-    type: DataTypes.BOOLEAN,
-    defaultValue: false,
-  }
+  // other fields like phoneNumber, profilePicture, etc.
 }, {
-  timestamps: true
+  timestamps: true,
 });
 
 export default User;
