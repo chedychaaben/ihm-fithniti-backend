@@ -1,3 +1,3 @@
 Bech nlanciw el backend :
 npm i
-node index.js
+npm run dev

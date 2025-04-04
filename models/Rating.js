@@ -1,38 +1,34 @@
-import { DataTypes } from "sequelize";
-import sequelize from "../db.js";
+import mongoose from 'mongoose';
 
-const Rating = sequelize.define("Rating", {
-  id: {
-    type: DataTypes.INTEGER,
-    autoIncrement: true,
-    primaryKey: true,
+const ratingSchema = new mongoose.Schema({
+  rater: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
   },
-  raterId: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-  },
-  ratedUserId: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-  },
-  rideId: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
+  ratedUser: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
   },
   stars: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    validate: {
-      min: 1,
-      max: 5,
-    },
+    type: Number,
+    required: true,
+    min: 1,
+    max: 5,
   },
   comment: {
-    type: DataTypes.TEXT,
-    allowNull: true,
+    type: String,
   },
-}, {
-  timestamps: true,
+  ride: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Ride',
+    required: true,
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
-export default Rating;
+export default mongoose.model('Rating', ratingSchema);
