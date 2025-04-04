@@ -4,7 +4,7 @@ import User from "../models/User.js";
 export const getUser = async (req, res, next) => {
   try {
     const user = await User.findByPk(req.params.id, {
-      include: ['ridesCreated', 'ridesJoined'], // Make sure these associations exist
+      include: ['ridesCreated', 'ridesJoined'],
       attributes: { exclude: ['password', 'updatedAt'] },
     });
 

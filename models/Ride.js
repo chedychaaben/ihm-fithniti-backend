@@ -1,77 +1,65 @@
-import mongoose from 'mongoose';
+import { DataTypes } from "sequelize";
+import sequelize from "../db.js";
 
-const rideSchema = new mongoose.Schema({
-  creator: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true,
+const Ride = sequelize.define("Ride", {
+  id: {
+    type: DataTypes.INTEGER,
+    autoIncrement: true,
+    primaryKey: true,
   },
-  passengers: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
-    },
-  ],
+  creatorId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
   availableSeats: {
-    type: Number,
-    required: true,
-    min: 1,
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    validate: {
+      min: 1,
+    },
   },
-  origin: {
-    place: {
-      type: String, 
-      required: true,
-    },
-    coordinates: {
-      type: [Number],
-    }, 
+  originPlace: {
+    type: DataTypes.STRING,
+    allowNull: false,
   },
-  destination: {
-    place: {
-      type: String,
-      required: true,
-    },
-    coordinates: {
-      type: [Number], // [longitude, latitude]
-    },
+  originCoordinates: {
+    type: DataTypes.JSON, // using JSON for coordinates
+    allowNull: true,
+  },
+  destinationPlace: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  destinationCoordinates: {
+    type: DataTypes.JSON, // using JSON for coordinates
+    allowNull: true,
   },
   startTime: {
-    type: Date,
-    required: true,
+    type: DataTypes.DATE,
+    allowNull: false,
   },
   endTime: {
-    type: Date,
-    required: true,
+    type: DataTypes.DATE,
+    allowNull: false,
   },
   status: {
-    type: String,
-    enum: ['pending', 'active', 'completed', 'canceled'],
-    default: 'pending',
+    type: DataTypes.ENUM("pending", "active", "completed", "canceled"),
+    defaultValue: "pending",
   },
   price: {
-    type: Number, 
+    type: DataTypes.FLOAT,
+    allowNull: true,  // This can be null if not provided
   },
-  vehicleDetails: {
-    vehicleNumber: {
-      type: String,
-      trim: true,
-    },
-    model: {
-      type: String,
-      trim: true,
-    },
+  vehicleNumber: {
+    type: DataTypes.STRING,
+    allowNull: true,  // This can be null if not provided
   },
-  chat: [ 
-    {
-      sender: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-      },
-      message: String,
-      timestamp: Date,
-    },
-  ],
-}, {timestamps:true}
-);
+  vehicleModel: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+}, {
+  timestamps: true,  // To automatically add `createdAt` and `updatedAt`
+});
 
-export default mongoose.model('Ride', rideSchema);
+export default Ride;

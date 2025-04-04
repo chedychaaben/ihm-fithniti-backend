@@ -56,11 +56,4 @@ const User = sequelize.define("User", {
 }, {
   timestamps: true,
 });
-
-// Associations (if you have Ride model)
-User.associate = (models) => {
-  User.hasMany(models.Ride, { foreignKey: "createdBy", as: "ridesCreated" });
-  User.belongsToMany(models.Ride, { through: "UserRides", as: "ridesJoined" });
-};
-
 export default User;
