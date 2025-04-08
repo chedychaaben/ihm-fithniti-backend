@@ -19,19 +19,22 @@ const userSchema = new mongoose.Schema({
   },
   isAdmin: {
     type: Boolean,
-    required: true,
     default: false,
   },
-  phoneNumber: {
+  isDriver: {
+    type: Boolean,
+    default: false,
+  },
+  driverLicense: {
     type: String,
   },
+  phoneNumber: String,
   profilePicture: {
     type: String,
     trim: true,
   },
-  age:{
-    type: Number,
-  },
+  age: Number,
+
   ridesCreated: [
     {
       type: mongoose.Schema.Types.ObjectId,
@@ -44,6 +47,7 @@ const userSchema = new mongoose.Schema({
       ref: 'Ride',
     },
   ],
+
   profile: {
     bio: {
       type: String,
@@ -64,6 +68,7 @@ const userSchema = new mongoose.Schema({
       },
     },
   },
+
   stars: {
     type: Number,
     max: 5,
@@ -75,7 +80,6 @@ const userSchema = new mongoose.Schema({
       ref: 'Rating',
     },
   ],
-}, {timestamps: true}
-);
+}, { timestamps: true });
 
 export default mongoose.model("User", userSchema);
