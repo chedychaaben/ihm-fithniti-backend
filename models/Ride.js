@@ -61,6 +61,22 @@ const rideSchema = new mongoose.Schema({
       trim: true,
     },
   },
+  petsAllowed: {
+    type: Boolean,
+    default: false,
+  },
+  smokingAllowed: {
+    type: Boolean,
+    default: false,
+  },
+  MaxUsersTwoInBack: {
+    type: Boolean,
+    default: false,
+  },
+  AirConditioning: {
+    type: Boolean,
+    default: true,
+  },
   chat: [ 
     {
       sender: {
