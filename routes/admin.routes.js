@@ -5,6 +5,6 @@ import { verifyAdmin } from "../utils/verifyToken.js";
 const router = express.Router();
 
 router.patch("/warn/:id", verifyAdmin, warnUser);
-router.delete("/ban/:id", verifyAdmin, banUser);
+router.delete("/ban/:id", verifyAdmin, banUser); 
 
 export default router;

@@ -14,17 +14,25 @@ export const warnUser = async (req, res, next) => {
   }
 };
 
+
 export const banUser = async (req, res, next) => {
   try {
     const { id } = req.params;
+    console.log("Information to ban user: ", id);
 
+    // Find the user by their ID
     const user = await User.findById(id);
     if (!user) return res.status(404).json({ message: "User not found" });
 
-    await User.findByIdAndDelete(id);
+    // Set the user's isBanned field to true
+    user.isBanned = true;
 
-    res.status(200).json({ message: "User banned (deleted)" });
+    // Save the updated user document
+    await user.save();
+
+    res.status(200).json({ message: "User banned successfully!" });
   } catch (err) {
     next(err);
   }
 };
+
