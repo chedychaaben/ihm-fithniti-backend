@@ -109,3 +109,17 @@ export const deleteRide = async(req, res, next) => {
     next(err)
   }
 }
+
+export const getPopularRides = async (req, res, next) => {
+  try {
+    const rides = await Ride.find()
+      .sort({ passengers: -1 }) // Plus de passagers = plus populaire
+      .limit(10)
+      .populate('creator', 'name profilePicture stars') 
+      .lean();
+
+    res.status(200).json({ success: true, rides });
+  } catch (err) {
+    next(err);
+  }
+}
