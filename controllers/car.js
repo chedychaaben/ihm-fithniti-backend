@@ -37,3 +37,14 @@ export const removeCar = async (req, res, next) => {
     next(err);
   }
 };
+
+
+// Lister les voitures de l'utilisateur connecté
+export const getMyCars = async (req, res, next) => {
+  try {
+    const cars = await Car.find({ owner: req.user.id });
+    res.status(200).json(cars);
+  } catch (err) {
+    next(err);
+  }
+};

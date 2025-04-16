@@ -13,6 +13,7 @@ import rideRoute from "./routes/ride.routes.js";
 import reservationRoute from "./routes/reservation.routes.js";
 import adminRoute from "./routes/admin.routes.js";
 import reviewRoute from "./routes/review.routes.js";
+import carRoute from "./routes/car.routes.js";
 
 const app = express();
 const PORT = 8085;
@@ -43,6 +44,7 @@ app.use("/api/rides", rideRoute);
 app.use("/api/reservations", reservationRoute);
 app.use("/api/admin", adminRoute);
 app.use("/api/reviews", reviewRoute);
+app.use("/api/cars", carRoute);
 
 // Middleware de gestion des erreurs
 app.use((err, req, res, next) => {

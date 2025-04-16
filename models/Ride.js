@@ -52,14 +52,18 @@ const rideSchema = new mongoose.Schema({
     type: Number, 
   },
   vehicleDetails: {
-    vehicleNumber: {
+    body: {
       type: String,
-      trim: true,
+      required: true,
+    },
+    marque: {
+      type: String,
+      required: true,
     },
     model: {
       type: String,
-      trim: true,
-    },
+      required: true,
+    }
   },
   petsAllowed: {
     type: Boolean,

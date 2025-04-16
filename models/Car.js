@@ -2,21 +2,21 @@
 import mongoose from 'mongoose';
 
 const carSchema = new mongoose.Schema({
-  driver: {
+  owner: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true,
   },
-  licensePlate: {
+  body: {
+    type: String,
+    required: true,
+  },
+  marque: {
     type: String,
     required: true,
   },
   model: {
     type: String,
-    required: true,
-  },
-  seatsAvailable: {
-    type: Number,
     required: true,
   },
 }, { timestamps: true });
