@@ -65,7 +65,7 @@ const rideSchema = new mongoose.Schema({
       required: true,
     }
   },
-  petsAllowed: {
+  maxTwoPassengersInBackSeats: {
     type: Boolean,
     default: false,
   },
@@ -73,11 +73,15 @@ const rideSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
-  MaxUsersTwoInBack: {
+  heavyLuggage: {
     type: Boolean,
     default: false,
   },
-  AirConditioning: {
+  petsAllowed: {
+    type: Boolean,
+    default: false,
+  },
+  airConditioning: {
     type: Boolean,
     default: true,
   },
