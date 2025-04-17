@@ -26,26 +26,50 @@ export const getAllRides = async (req, res, next) => {
 export const findRides = async (req, res, next) => {
   try {
     const { from, to, seat, date } = req.query;
-    
-    if (!from || !to || !seat || !date) {
-        return res.status(400).json({ message: 'Please provide all the details' });
-    }
-    const searchDate = new Date(date)
-    searchDate.setHours(0, 0, 0, 0); // Set to midnight of the specified date
 
-    const rides = await Ride.find({
-        'origin.place': new RegExp(from, 'i'),
-        'destination.place': new RegExp(to, 'i'),
-        'availableSeats': { $gte: seat},
-        'startTime': { $gte: searchDate.toISOString(), $lt: new Date(searchDate.getTime() + 24 * 60 * 60 * 1000).toISOString() } // Filter rides up to next midnight
-    })
-    .populate('creator', 'name profilePicture stars') 
-    .lean(); 
+    if (!from?.trim() || !to?.trim()) {
+      return res.status(400).json({ message: 'Please provide both "from" and "to" locations.' });
+    }
+
+    const query = {
+      'origin.place': new RegExp(from, 'i'),
+      'destination.place': new RegExp(to, 'i'),
+    };
+
+    // Seat validation
+    if (seat?.trim()) {
+      const seatNumber = parseInt(seat.trim());
+      if (!isNaN(seatNumber) && seatNumber > 0) {
+        query.availableSeats = { $gte: seatNumber };
+      }
+    }
+    
+    // Date validation
+    if (date?.trim()) {
+      const searchDate = new Date(date.trim());
+      if (!isNaN(searchDate.getTime())) { // Valid date check
+        const startOfDay = new Date(searchDate);
+        startOfDay.setUTCHours(0, 0, 0, 0);
+        
+        const endOfDay = new Date(searchDate);
+        endOfDay.setUTCHours(23, 59, 59, 999);
+        
+        query.startTime = {
+          $gte: startOfDay,
+          $lt: endOfDay
+        };
+      }
+    }
+    
+    const rides = await Ride.find(query)
+      .lean();
+
     res.status(200).json({ success: true, rides });
+
   } catch (err) {
     next(err);
   }
-}
+};
 
 export const joinRide = async (req, res, next) =>{
   try{
@@ -112,14 +136,32 @@ export const deleteRide = async(req, res, next) => {
 
 export const getPopularRides = async (req, res, next) => {
   try {
-    const rides = await Ride.find()
-      .sort({ passengers: -1 }) // Plus de passagers = plus populaire
-      .limit(10)
-      .populate('creator', 'name profilePicture stars') 
-      .lean();
+    const popularRoutes = await Ride.aggregate([
+      {
+        $group: {
+          _id: {
+            origin: "$origin.place",
+            destination: "$destination.place",
+          },
+          totalRides: { $sum: 1 },
+          startingPrice: { $min: "$price" }, // lowest price for this route
+        },
+      },
+      { $sort: { totalRides: -1 } },
+      { $limit: 10 },
+      {
+        $project: {
+          _id: 0,
+          origin: "$_id.origin",
+          destination: "$_id.destination",
+          totalRides: 1,
+          startingPrice: 1,
+        },
+      },
+    ]);
 
-    res.status(200).json({ success: true, rides });
+    res.status(200).json({ success: true, routes: popularRoutes });
   } catch (err) {
     next(err);
   }
-}
+};
