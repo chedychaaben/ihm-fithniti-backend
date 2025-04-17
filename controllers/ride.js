@@ -47,7 +47,7 @@ export const findRides = async (req, res, next) => {
     // Date validation
     if (date?.trim()) {
       const searchDate = new Date(date.trim());
-      if (!isNaN(searchDate.getTime())) { // Valid date check
+      if (!isNaN(searchDate.getTime())) {
         const startOfDay = new Date(searchDate);
         startOfDay.setUTCHours(0, 0, 0, 0);
         
@@ -62,7 +62,7 @@ export const findRides = async (req, res, next) => {
     }
     
     const rides = await Ride.find(query)
-      .lean();
+      .lean().populate('creator');
 
     res.status(200).json({ success: true, rides });
 

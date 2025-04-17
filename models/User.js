@@ -32,12 +32,10 @@ const userSchema = new mongoose.Schema({
   driverLicense: {
     type: String,
   },
-  phoneNumber: String,
   profilePicture: {
     type: String,
-    trim: true,
+    trim: true
   },
-  age: Number,
 
   ridesCreated: [
     {
@@ -54,6 +52,14 @@ const userSchema = new mongoose.Schema({
 
   profile: {
     bio: {
+      type: String,
+      trim: true,
+    },
+    phoneNumber: {
+      type: String,
+      trim: true,
+    },
+    age: {
       type: String,
       trim: true,
     },

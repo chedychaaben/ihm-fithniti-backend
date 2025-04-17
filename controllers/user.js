@@ -51,3 +51,34 @@ export const updateUser = async (req, res, next) => {
 //     next(err)
 //   }
 // }
+
+
+// controllers/userController.js
+
+export const uploadProfileImage = async (req, res, next) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ error: 'No file uploaded' });
+    }
+
+    const imageUrl = `/uploads/${req.file.filename}`;
+
+    const updatedUser = await User.findByIdAndUpdate(
+      req.body.userId,
+      { profilePicture: imageUrl },
+      { new: true }
+    ).select('-password');
+
+    if (!updatedUser) {
+      return res.status(400).json({ error: 'User not found' });
+    }
+
+    res.status(200).json({
+      message: 'Profile image uploaded successfully',
+      user: updatedUser
+    });
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
+};
