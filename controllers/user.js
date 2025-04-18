@@ -56,7 +56,7 @@ export const updateUser = async (req, res, next) => {
 // controllers/userController.js
 
 export const uploadProfileImage = async (req, res, next) => {
-  console.log("Wselt lel upload Profile Image")
+  const userId = req.user.id; //
   try {
     if (!req.file) {
       return res.status(400).json({ error: 'No file uploaded' });
@@ -64,7 +64,7 @@ export const uploadProfileImage = async (req, res, next) => {
 
     const imageUrl = `/uploads/${req.file.filename}`;
     const updatedUser = await User.findByIdAndUpdate(
-      req.body.userId,
+      userId,
       { profilePicture: imageUrl },
       { new: true }
     ).select('-password');
