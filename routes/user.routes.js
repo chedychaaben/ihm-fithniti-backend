@@ -23,6 +23,6 @@ router.get("/", verifyAdmin, getAllUsers)
 router.get("/:id", verifyUser, getUser)
 router.post("/:id", verifyUser, updateUser)
 // router.delete("/:id", verifyUser, deleteUser)
-router.post('/upload-profilepicture', upload.single('profileImage'), uploadProfileImage);
+router.post('/XXXXXXXupload-profilepicture', upload.single('profileImage'), uploadProfileImage);
 
 export default router
