@@ -36,6 +36,14 @@ const userSchema = new mongoose.Schema({
     type: String,
     trim: true
   },
+  cinPicture: {
+    type: String,
+    trim: true
+  },
+  permisPicture: {
+    type: String,
+    trim: true
+  },
 
   ridesCreated: [
     {
