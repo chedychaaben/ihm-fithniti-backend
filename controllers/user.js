@@ -82,3 +82,59 @@ export const uploadProfileImage = async (req, res, next) => {
     next(err);
   }
 };
+
+export const uploadcinImage = async (req, res, next) => {
+  const userId = req.user.id; //
+  try {
+    if (!req.file) {
+      return res.status(400).json({ error: 'No file uploaded' });
+    }
+
+    const imageUrl = `/uploads/${req.file.filename}`;
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { cinPicture: imageUrl },
+      { new: true }
+    ).select('-password');
+
+    if (!updatedUser) {
+      return res.status(400).json({ error: 'User not found' });
+    }
+
+    res.status(200).json({
+      message: 'cin image uploaded successfully',
+      user: updatedUser
+    });
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
+};
+
+export const uploadpermisImage = async (req, res, next) => {
+  const userId = req.user.id; //
+  try {
+    if (!req.file) {
+      return res.status(400).json({ error: 'No file uploaded' });
+    }
+
+    const imageUrl = `/uploads/${req.file.filename}`;
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { permisPicture: imageUrl },
+      { new: true }
+    ).select('-password');
+
+    if (!updatedUser) {
+      return res.status(400).json({ error: 'User not found' });
+    }
+
+    res.status(200).json({
+      message: 'permis image uploaded successfully',
+      user: updatedUser
+    });
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
+};

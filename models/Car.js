@@ -19,6 +19,14 @@ const carSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  isSoftDeleted: {
+    type: Boolean,
+    default: false,
+  },
+  carPicture: {
+    type: String,
+    trim: true
+  },
 }, { timestamps: true });
 
 export default mongoose.model('Car', carSchema);

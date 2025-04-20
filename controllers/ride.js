@@ -3,7 +3,7 @@ import User from "../models/User.js";
 
 export const getRide = async (req, res, next) => {
   try{
-    const ride = await Ride.findById(req.params.id).populate('creator', 'name age stars rating profile ridesCreated createdAt').lean(); 
+    const ride = await Ride.findById(req.params.id).populate('creator', 'name age stars rating profile ridesCreated createdAt profilePicture').lean(); 
     if (!ride) {
       return res.status(404).json({ message: 'Ride not found' });
     }
