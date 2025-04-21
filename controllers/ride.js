@@ -107,6 +107,35 @@ export const createRide = async (req, res, next) =>{
     next(err);
   }
 }
+export const leaveRide = async (req, res, next) => {
+  try {
+    const ride = await Ride.findById(req.params.id);
+    if (!ride) {
+      return res.status(404).json({ message: "Ride not found" });
+    }
+
+    // Vérifier si l'utilisateur est bien dans la liste des passagers
+    if (!ride.passengers.includes(req.user.id)) {
+      return res.status(400).json({ message: "You are not part of this ride." });
+    }
+
+    // Enlever l'utilisateur du ride
+    await Ride.updateOne(
+      { _id: ride._id },
+      { $pull: { passengers: req.user.id }, $inc: { availableSeats: 1 } }
+    );
+
+    // Retirer le ride de la liste "ridesJoined" de l'utilisateur
+    await User.updateOne(
+      { _id: req.user.id },
+      { $pull: { ridesJoined: ride._id } }
+    );
+
+    res.status(200).json({ message: "Successfully left the ride!" });
+  } catch (err) {
+    next(err);
+  }
+};
 
 export const updateRide = async(req, res, next) => {
   try{
