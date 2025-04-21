@@ -194,3 +194,11 @@ export const getPopularRides = async (req, res, next) => {
     next(err);
   }
 };
+export const getAllRidesForAdmin = async (req, res, next) => {
+  try{
+    const rides = await Ride.find().populate('creator', 'name stars').lean(); 
+    res.status(200).json(rides); 
+  }catch(err){
+    next(err);
+  }
+}
