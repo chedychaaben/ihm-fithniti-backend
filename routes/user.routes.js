@@ -7,7 +7,7 @@ const router = express.Router()
 
 router.get("/", verifyAdmin, getAllUsers)
 router.post('/update-profile-image', verifyToken, updateProfileImage)
-router.get('/get-profile-image', verifyToken, getProfileImage)
+router.get('/get-profile-image/:id' , getProfileImage)
 
 router.get("/:id", verifyUser, getUser)
 router.post("/:id", verifyUser, updateUser)
