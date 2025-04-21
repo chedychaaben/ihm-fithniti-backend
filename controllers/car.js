@@ -58,15 +58,17 @@ export const getMyCars = async (req, res, next) => {
 };
 
 
-export const uploadcarImage = async (req, res, next) => {
+export const updateCarImage = async (req, res, next) => {
   const carId = req.params.id;
+  const fileNameInUploadsFolder = req.file.fileNameInUploadsFolder
+
 
   try {
     if (!req.file) {
       return res.status(400).json({ error: 'No file uploaded' });
     }
 
-    const imageUrl = `/uploads/${req.file.filename}`;
+    const imageUrl = `/uploads/${fileNameInUploadsFolder}`;
 
     const updatedCar = await Car.findOneAndUpdate(
       { _id: carId, owner: req.user.id },

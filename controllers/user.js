@@ -21,25 +21,39 @@ export const getAllUsers = async (req, res, next) => {
   }
 };
 
-
 export const updateUser = async (req, res, next) => {
   try {
-    const { name, phoneNumber, profilePicture, age, profile } = req.body;
+    const { name, phoneNumber, profilePicture, age, profile, cinPicture, permisPicture } = req.body;
+
+    // Create an update object to conditionally add the fields if they have values
+    const updateFields = {
+      name,
+      phoneNumber,
+      profilePicture,
+      age,
+      profile
+    };
+
+    // Only update the cinPicture if it has a value
+    if (cinPicture) {
+      updateFields.cinPicture = cinPicture;
+    }
+
+    // Only update the permisPicture if it has a value
+    if (permisPicture) {
+      updateFields.permisPicture = permisPicture;
+    }
+
+    // Perform the update with the conditional fields
     const updatedUser = await User.findByIdAndUpdate(
       req.params.id,
-      {
-        $set: {
-          name,
-          phoneNumber,
-          profilePicture,
-          age,
-          profile
-      }},
-      {new:true, select: '-password'}    
-    )
-    res.status(200).json(updatedUser)
-  }catch (err) {
-    next(err)
+      { $set: updateFields },
+      { new: true, select: '-password' }
+    );
+
+    res.status(200).json(updatedUser);
+  } catch (err) {
+    next(err);
   }
 }
 
@@ -55,17 +69,18 @@ export const updateUser = async (req, res, next) => {
 
 // controllers/userController.js
 
-export const uploadProfileImage = async (req, res, next) => {
-  const userId = req.user.id; //
+export const updateProfileImage = async (req, res, next) => {
+  const userId = req.user.id;
+  const fileNameInUploadsFolder = req.body.fileNameInUploadsFolder;
+
   try {
-    if (!req.file) {
-      return res.status(400).json({ error: 'No file uploaded' });
+    if (!fileNameInUploadsFolder) {
+      return res.status(400).json({ error: 'No file url provided to update' });
     }
 
-    const imageUrl = `/uploads/${req.file.filename}`;
     const updatedUser = await User.findByIdAndUpdate(
       userId,
-      { profilePicture: imageUrl },
+      { profilePicture: fileNameInUploadsFolder },
       { new: true }
     ).select('-password');
 
@@ -83,55 +98,24 @@ export const uploadProfileImage = async (req, res, next) => {
   }
 };
 
-export const uploadcinImage = async (req, res, next) => {
-  const userId = req.user.id; //
+
+export const getProfileImage = async (req, res, next) => {
+  const userId = req.params.id;
+
   try {
-    if (!req.file) {
-      return res.status(400).json({ error: 'No file uploaded' });
+    const user = await User.findById(userId).select('profilePicture'); // Only select profilePicture field
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
     }
 
-    const imageUrl = `/uploads/${req.file.filename}`;
-    const updatedUser = await User.findByIdAndUpdate(
-      userId,
-      { cinPicture: imageUrl },
-      { new: true }
-    ).select('-password');
-
-    if (!updatedUser) {
-      return res.status(400).json({ error: 'User not found' });
+    if (!user.profilePicture) {
+      return res.status(404).json({ error: 'Profile picture not found' });
     }
 
     res.status(200).json({
-      message: 'cin image uploaded successfully',
-      user: updatedUser
-    });
-  } catch (err) {
-    console.error(err);
-    next(err);
-  }
-};
-
-export const uploadpermisImage = async (req, res, next) => {
-  const userId = req.user.id; //
-  try {
-    if (!req.file) {
-      return res.status(400).json({ error: 'No file uploaded' });
-    }
-
-    const imageUrl = `/uploads/${req.file.filename}`;
-    const updatedUser = await User.findByIdAndUpdate(
-      userId,
-      { permisPicture: imageUrl },
-      { new: true }
-    ).select('-password');
-
-    if (!updatedUser) {
-      return res.status(400).json({ error: 'User not found' });
-    }
-
-    res.status(200).json({
-      message: 'permis image uploaded successfully',
-      user: updatedUser
+      message: 'Profile picture retrieved successfully',
+      profilePicture: user.profilePicture
     });
   } catch (err) {
     console.error(err);

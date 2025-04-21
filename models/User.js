@@ -70,6 +70,7 @@ const userSchema = new mongoose.Schema({
     age: {
       type: String,
       trim: true,
+      min: "0"
     },
     preferences: {
       smoking: {
