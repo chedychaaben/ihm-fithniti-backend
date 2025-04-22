@@ -6,7 +6,7 @@ export const bookRide = async (req, res, next) => {
     const { rideId } = req.body;
 
     const ride = await Ride.findById(rideId);
-    if (!ride || ride.availableSeats < 1) {
+    if (!ride || ride.availableSeats <= 1) {
       return res.status(400).json({ message: "Ride not available" });
     }
 
