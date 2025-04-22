@@ -68,7 +68,7 @@ export const getReviewsByUser = async (req, res, next) => {
     return res.status(200).json({
       success: true,
       count: reviews.length,
-      score: reviews.reduce((acc, review) => acc + review.rate, 0) / reviews.length,
+      score: Math.round((reviews.reduce((acc, review) => acc + review.rate, 0) / reviews.length) * 10) / 10,
       reviews
     });
 
