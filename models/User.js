@@ -87,7 +87,6 @@ const userSchema = new mongoose.Schema({
       },
     },
   },
-
   stars: {
     type: Number,
     max: 5,

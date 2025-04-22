@@ -3,23 +3,24 @@
 import Review from "../models/Review.js";
 import Ride from "../models/Ride.js";
 import mongoose from "mongoose";
+
 export const submitReview = async (req, res, next) => {
   try {
-    const { rideId, comment, rate } = req.body;
+    const { creatorOfReview, rideId, comment, rate } = req.body;
 
     if (!rideId || !rate) {
       return res.status(400).json({ message: "Ride ID and rate are required." });
     }
 
     // Check if the user already submitted a review for this ride
-    const existingReview = await Review.findOne({ ride: rideId, user: req.user.id });
+    const existingReview = await Review.findOne({ ride: rideId, user: creatorOfReview });
     if (existingReview) {
       return res.status(400).json({ message: "You have already submitted a review for this ride." });
     }
 
     const newReview = new Review({
       ride: rideId,
-      user: req.user.id,
+      user: creatorOfReview,
       comment,
       rate,
     });
@@ -54,7 +55,6 @@ export const submitReview = async (req, res, next) => {
 export const getReviewsByUser = async (req, res, next) => {
   try {
     let { userId } = req.params;
-    console.log("Fetching reviews for userId:", userId);
 
     userId = userId.trim(); // <-- très important
 
