@@ -6,21 +6,22 @@ import mongoose from "mongoose";
 
 export const submitReview = async (req, res, next) => {
   try {
-    const { creatorOfReview, rideId, comment, rate } = req.body;
-
+    const { reviewOwner, reviewer, rideId, comment, rate } = req.body;
+    
     if (!rideId || !rate) {
       return res.status(400).json({ message: "Ride ID and rate are required." });
     }
 
     // Check if the user already submitted a review for this ride
-    const existingReview = await Review.findOne({ ride: rideId, user: creatorOfReview });
+    const existingReview = await Review.findOne({ ride: rideId, reviewOwner: reviewOwner , reviewer: reviewer});
     if (existingReview) {
       return res.status(400).json({ message: "You have already submitted a review for this ride." });
     }
 
     const newReview = new Review({
       ride: rideId,
-      user: creatorOfReview,
+      reviewOwner: reviewOwner,
+      reviewer: reviewer,
       comment,
       rate,
     });
@@ -62,7 +63,7 @@ export const getReviewsByUser = async (req, res, next) => {
       return res.status(400).json({ success: false, message: "Invalid user ID." });
     }
 
-    const reviews = await Review.find({ user: new mongoose.Types.ObjectId(userId) });
+    const reviews = await Review.find({ reviewer : new mongoose.Types.ObjectId(userId) });
 
     return res.status(200).json({
       success: true,
