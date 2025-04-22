@@ -16,7 +16,7 @@ export const getRide = async (req, res, next) => {
 
 export const getAllRides = async (req, res, next) => {
   try{
-    const rides = await Ride.find().populate('creator', 'name stars').lean(); 
+    const rides = await Ride.find().lean().populate('creator', 'name stars'); 
     res.status(200).json(rides); 
   }catch(err){
     next(err);
@@ -62,7 +62,7 @@ export const findRides = async (req, res, next) => {
     }
     
     const rides = await Ride.find(query)
-      .lean().populate('creator');
+      .lean();
 
     res.status(200).json({ success: true, rides });
 
